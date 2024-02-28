@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GifsService } from '../../services/gifs.service';
 
 @Component({
@@ -6,4 +6,6 @@ import { GifsService } from '../../services/gifs.service';
   templateUrl: './card-list.component.html',
   styleUrl: './card-list.component.css',
 })
-export class CardListComponent {}
+export class CardListComponent {
+  @Input() gifs: any = [];
+}
