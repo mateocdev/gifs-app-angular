@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class GifsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.loadLocalStorage();
+  }
 
   private _historial: string[] = [];
   private apiKey: string = 'cdpA4YG1aTFHXhXVMLGYzCiYZolDXj9K';
@@ -11,6 +13,22 @@ export class GifsService {
   public gifList: any[] = [];
   get historial() {
     return [...this._historial];
+  }
+
+  private saveLocalStorage(): void {
+    localStorage.setItem('historial', JSON.stringify(this._historial));
+  }
+
+  private loadLocalStorage(): void {
+    const historial = localStorage.getItem('historial');
+    if (historial) {
+      this._historial = JSON.parse(historial);
+    }
+
+    const lastSearch = this._historial[0];
+    if (lastSearch) {
+      this.searchTag(lastSearch);
+    }
   }
 
   async searchTag(tag: string) {
@@ -22,6 +40,7 @@ export class GifsService {
     if (!this._historial.includes(tag)) {
       this._historial.unshift(tag);
       this._historial = this._historial.splice(0, 10);
+      this.saveLocalStorage();
     }
 
     const params = new HttpParams()
